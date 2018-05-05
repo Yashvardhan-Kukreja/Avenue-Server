@@ -192,7 +192,7 @@ module.exports.fetchThresholdCasesLocation = (current_lat, current_long) => {
                         }
                     }
                     setTimeout(function(){
-                        resolve({success: true, message: "Fetched the cases under 4km", cases: patients_under_4km});
+                        resolve({success: true, message: "Fetched the cases within 4km", cases: patients_under_4km});
                     }, 500);
                 }
             }
