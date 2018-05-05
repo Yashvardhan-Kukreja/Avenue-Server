@@ -16,12 +16,12 @@ module.exports.registerDoctor = (name, email, contact, password) => {
         bcrypt.genSalt(10, (err, salt) => {
             if (err) {
                 console.log(err);
-                reject({success: false, message: "An error occurred"});
+                reject({success: false, message: "An error occurred", err: err});
             } else {
                 bcrypt.hash(password, salt, null, (err, hash) => {
                     if (err) {
                         console.log(err);
-                        reject({success: false, message: "An error occurred"});
+                        reject({success: false, message: "An error occurred", err: err});
                     } else {
                         newDoc.password = hash;
                         newDoc.save((err) => {
@@ -30,7 +30,7 @@ module.exports.registerDoctor = (name, email, contact, password) => {
                                 if (err.code == 11000)
                                     reject({success: false, message: "A doctor already exists with the same email"});
                                 else
-                                    reject({success: false, message: "An error occurred"});
+                                    reject({success: false, message: "An error occurred", err: err});
                             } else {
                                 resolve({success: true, message: "Doctor successfully registered"});
                             }
@@ -54,7 +54,7 @@ module.exports.loginDoctor = (email, password) => {
         }).exec((err, outputDoc) => {
             if (err) {
                 console.log(err);
-                reject({success: false, message: "An error occurred"});
+                reject({success: false, message: "An error occurred", err: err});
             } else {
                 if (!outputDoc)
                     reject({success: false, message: "Doctor not found!"});
@@ -62,7 +62,7 @@ module.exports.loginDoctor = (email, password) => {
                     bcrypt.compare(password, outputDoc.password, (err, valid) => {
                         if (err) {
                             console.log(err);
-                            reject({success: false, message: "An error occurred"});
+                            reject({success: false, message: "An error occurred", err: err});
                         } else {
                             if (!valid)
                                 reject({success: false, message: "Wrong password entered"});
@@ -87,7 +87,7 @@ module.exports.registerPatient = (name, address, geoaddress, email, contact, dis
                 Disease.findOne({name: disease_name}).exec((err, outputDisease) => {
                     if (err) {
                         console.log(err);
-                        reject({success: false, message: "An error occurred"});
+                        reject({success: false, message: "An error occurred", err: err});
                     } else {
                         if (!outputDisease) {
                             var newDisease = new Disease({
@@ -97,7 +97,7 @@ module.exports.registerPatient = (name, address, geoaddress, email, contact, dis
                             newDisease.save((err, savedDisease) => {
                                 if (err) {
                                     console.log(err);
-                                    reject({success: false, message: "An error occurred"});
+                                    reject({success: false, message: "An error occurred", err: err});
                                 } else {
                                     if (!outputPatient) {
                                         var newPatient = new Patient({
@@ -112,7 +112,7 @@ module.exports.registerPatient = (name, address, geoaddress, email, contact, dis
                                         newPatient.save((err, out1) => {
                                             if (err) {
                                                 console.log(err);
-                                                reject({success: false, message: "An error occurred"});
+                                                reject({success: false, message: "An error occurred", err: err});
                                             } else {
                                                 Doctor.findOneAndUpdate({_id: docId}, {$push:{patients: out1._id}}).exec((err) => {
                                                     resolve({success: true, message: "Patient registered successfully"});
@@ -130,7 +130,7 @@ module.exports.registerPatient = (name, address, geoaddress, email, contact, dis
                                         outputPatient.save((err, out2) => {
                                             if (err) {
                                                 console.log(err);
-                                                reject({success: false, message: "An error occurred"});
+                                                reject({success: false, message: "An error occurred", err: err});
                                             } else {
                                                 Doctor.findOneAndUpdate({_id: docId}, {$push:{patients: out2._id}}).exec((err) => {
                                                     resolve({success: true, message: "Patient registered successfully"});
@@ -157,7 +157,7 @@ module.exports.registerDisease = (name, description) => {
         newDisease.save((err) => {
             if (err) {
                 console.log(err);
-                reject({success: false, message: "An error occurred"});
+                reject({success: false, message: "An error occurred", err: err});
             } else {
                 resolve({success: true, message: "Disease registered successfully"});
             }
