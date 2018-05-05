@@ -123,6 +123,9 @@ module.exports.closeCase = (docId, patId) => {
     });
 };
 
+//28.496808, 77.063587
+//28.493921, 77.059303
+
 module.exports.fetchAllPatients = (id) => {
     return new Promise((resolve, reject) => {
         Doctor.findOne({_id: id}).populate({
@@ -184,11 +187,12 @@ module.exports.fetchThresholdCasesLocation = (current_lat, current_long) => {
                 else {
                     var patients_under_4km = [];
                     for (var i=0; i<outputPatients.length; i++) {
-                        if (haversine.calcGeoDistance(parseFloat(current_lat), parseFloat(current_long), outputPatients[i].lat, outputPatients[i].long) <= 4)
+                        if (haversine.calcGeoDistance(parseFloat(current_lat), parseFloat(current_long), outputPatients[i].lat, outputPatients[i].long) <= 4){
                             patients_under_4km.push(outputPatients[i]);
+                        }
                     }
                     setTimeout(function(){
-                        resolve({success: true, message: "Fetched the cases under 4km", cases: outputPatients});
+                        resolve({success: true, message: "Fetched the cases under 4km", cases: patients_under_4km});
                     }, 500);
                 }
             }

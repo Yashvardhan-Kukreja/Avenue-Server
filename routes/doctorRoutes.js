@@ -52,4 +52,15 @@ router.post("/openCase/:docId", (req, res) => {
     });
 });
 
+router.post("/nearbyCases", (req, res) => {
+    let current_lat = req.body.current_lat;
+    let current_long = req.body.current_long;
+
+    DoctorControllers.fetchThresholdCasesLocation(current_lat, current_long).then(data => {
+        res.json(data);
+    }).catch(err => {
+        res.json(err);
+    });
+});
+
 module.exports = router;
