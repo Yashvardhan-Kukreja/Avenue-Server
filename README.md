@@ -1,24 +1,45 @@
-# Avenue-Server:
-## AngelHack 2018
+# Avenue - Server Side code
 
-Server side code for the Avenue
+API documentation
 
-## Description:
+## Routes Structure
 
-Lorem Ipsum
+**=> Base URL:**
+   https://avenue-angelhack.herokuapp.com
 
-## Routes Structure:
+**=> Authentication Routes:**
 
-=> Base URL - https://avenue-angelhack.herokuapp.com
+Doctor SignUp
+- POST /authenticate/user/register : Parameters (name, email, password, contact)
+- Response : {success: true, message: "Doctor registered successfully"}
 
-=> Routes:
+Doctor Login
+- POST /authenticate/user/login : Parameters (email, password)
+- Response : {success: true, message: "Doctor logged in successfully", token: token}
 
--- Authentication Routes:
+Organisation SignUp
+- POST /authenticate/organisation/register : Parameters (name, college, email, contact, password)
+- Response : {success: true, message: "Organisation registered successfully"}
 
-    <dl>
-        <dt> POST /authenticate/doctor/register -> parameters (name, email, contact, password) </dt>
-        <dd> Response: {success: true, message: "Doctor registered successfully"}</dd>
+Organisation Login
+- POST /authenticate/organisation/login : Parameters (email, password)
+- Response : {success: true, message: "Organisation authenticated successfully", token: token}
 
-        <dt> POST /authenticate/doctor/login -> parameters (email, password) </dt>
-        <dd> Response: {success: true, message: "Doctor looged in successfully", doctor: <fully expanded doctor object> }
-    </dl>
+**=> User Routes:**
+
+Fetching user details
+- GET /user/fetchDetails: Headers ("x-access-token": token)
+- Response : {success: true, message: "User details fetched successfully", user: user}
+
+**=> Organisation Routes:**
+
+Fetching user details
+- GET /user/fetchDetails: Headers ("x-access-token": token)
+- Response : {success: true, message: "Organisation details fetched successfully", organisation: organisation}
+
+
+**=> Variables:**
+
+- token: JSON Web Token containing the user object or the organisation object in encoded form
+- user: A user object containing the respective user details except _id and password
+- organisation: An organisation object containing the respective organisation details except _id and password

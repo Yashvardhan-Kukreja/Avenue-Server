@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const authRouter = require("./routes/authRoutes");
 const doctorRouter = require("./routes/doctorRoutes");
 
-const DB = process.env.DB;
+const DB = "mongodb://yash:yash@ds117749.mlab.com:17749/avenue" || process.env.DB;
 const port = process.env.PORT || 8000;
 const app = express();
 
@@ -23,8 +23,6 @@ mongoose.connect(DB, err => {
 
         app.use(logger('dev'));
 
-        app.use(helmet());
-        app.use(compression());
 
         app.use('/authenticate', authRouter);
         app.use('/doctor', doctorRouter);
