@@ -9,6 +9,12 @@ const patientSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    lat: {
+        type: Number
+    },
+    long: {
+        type: Number
+    },
     geoaddress: {
         type: String, //"12.122334 23.1223"
         required: true
@@ -28,6 +34,9 @@ const patientSchema = new mongoose.Schema({
     case_status: {
         type: Boolean,
         default: true
+    },
+    img_url: {
+        type: String
     }
 });
 

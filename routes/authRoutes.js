@@ -38,8 +38,9 @@ router.post("/patient/register/:docId", (req, res) => {
     let disease_name = req.body.disease_name;
     let disease_desc = req.body.disease_desc;
     let docId = req.params.docId;
+    let img_url = req.body.img_url;
 
-    AuthControllers.registerPatient(name, address, geoaddress, email, contact, disease_name, disease_desc, docId).then(data => {
+    AuthControllers.registerPatient(name, address, geoaddress, email, contact, disease_name, disease_desc, img_url, docId).then(data => {
         res.json(data);
     }).catch(err => {
         res.json(err);
@@ -54,7 +55,15 @@ router.post("/disease/register", (req, res) => {
         res.json(data);
     }).catch(err => {
         res.json(err);
-    })
+    });
+});
+
+router.get("/fetchCoordinates", (req, res) => {
+    AuthControllers.fetchCoordinates().then(data => {
+        res.json(data);
+    }).catch(err => {
+        res.json(err);
+    });
 });
 
 module.exports = router;
