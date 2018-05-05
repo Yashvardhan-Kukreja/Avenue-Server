@@ -181,7 +181,7 @@ module.exports.registerDisease = (name, description) => {
 // lat, long, dis_name, dis_description
 module.exports.fetchCoordinates = () => {
     return new Promise((resolve, reject) => {
-        Patient.find({case_status: true}, {_id: 0, name: 0, email: 0, contact: 0, address: 0, geoaddress: 0}).populate({
+        Patient.find({case_status: true}, {_id: 0, name: 0, email: 0, contact: 0, address: 0, geoaddress: 0, case_status: 0, img_url: 0}).populate({
             path: 'current_disease',
             model: 'Disease'
         }).exec((err, outputPatients) => {
