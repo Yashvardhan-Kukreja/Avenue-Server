@@ -6,7 +6,6 @@ const Disease = require('../database/disease/diseaseModel');
 
 module.exports.registerDoctor = (name, email, contact, password) => {
     return new Promise((resolve, reject) => {
-
         var newDoc = new Doctor({
             name: name,
             email: email,
@@ -77,7 +76,7 @@ module.exports.loginDoctor = (email, password) => {
     });
 };
 
-module.exports.registerPatient = (name, address, geoaddress, email, contact, disease_name) => {
+module.exports.registerPatient = (name, address, geoaddress, email, contact, disease_name, disease_description, docId) => {
     return new Promise((resolve, reject) => {
         Patient.findOne({$or: [{email: email}, {contact: contact}]}).exec((err, outputPatient) => {
             if (err) {
@@ -91,7 +90,11 @@ module.exports.registerPatient = (name, address, geoaddress, email, contact, dis
                         reject({success: false, message: "An error occurred"});
                     } else {
                         if (!outputDisease) {
-                            outputDisease.save((err, savedDisease) => {
+                            var newDisease = new Disease({
+                                name: disease_name,
+                                description: disease_description
+                            });
+                            newDisease.save((err, savedDisease) => {
                                 if (err) {
                                     console.log(err);
                                     reject({success: false, message: "An error occurred"});
@@ -103,14 +106,17 @@ module.exports.registerPatient = (name, address, geoaddress, email, contact, dis
                                             geoaddress: geoaddress,
                                             email: email,
                                             contact: contact,
-                                            current_disease: savedDisease._id
+                                            current_disease: savedDisease._id,
+                                            case_status: true
                                         });
-                                        newPatient.save((err) => {
+                                        newPatient.save((err, out1) => {
                                             if (err) {
                                                 console.log(err);
                                                 reject({success: false, message: "An error occurred"});
                                             } else {
-                                                resolve({success: true, message: "Patient registered successfully"});
+                                                Doctor.findOneAndUpdate({_id: docId}, {$push:{patients: out1._id}}).exec((err) => {
+                                                    resolve({success: true, message: "Patient registered successfully"});
+                                                });
                                             }
                                         });
                                     } else {
@@ -120,12 +126,15 @@ module.exports.registerPatient = (name, address, geoaddress, email, contact, dis
                                         outputPatient.email = email;
                                         outputPatient.contact = contact;
                                         outputPatient.current_disease = savedDisease._id;
-                                        outputPatient.save((err) => {
+                                        outputPatient.case_status = true;
+                                        outputPatient.save((err, out2) => {
                                             if (err) {
                                                 console.log(err);
                                                 reject({success: false, message: "An error occurred"});
                                             } else {
-                                                resolve({success: true, message: "Patient updated successfully"});
+                                                Doctor.findOneAndUpdate({_id: docId}, {$push:{patients: out2._id}}).exec((err) => {
+                                                    resolve({success: true, message: "Patient registered successfully"});
+                                                });
                                             }
                                         });
                                     }
@@ -139,4 +148,19 @@ module.exports.registerPatient = (name, address, geoaddress, email, contact, dis
     });
 };
 
-module.exports.registerDisease = (name, description, )
+module.exports.registerDisease = (name, description) => {
+    return new Promise((resolve, reject) => {
+        var newDisease = new Disease({
+            name: name,
+            description: description
+        });
+        newDisease.save((err) => {
+            if (err) {
+                console.log(err);
+                reject({success: false, message: "An error occurred"});
+            } else {
+                resolve({success: true, message: "Disease registered successfully"});
+            }
+        });
+    });
+};

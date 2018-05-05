@@ -22,11 +22,11 @@ const patientSchema = new mongoose.Schema({
         required: true
     },
     current_disease: {
-        type: mongoose.Types.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Disease'
     },
     case_status: {
-        type: boolean,
+        type: Boolean,
         default: true
     }
 });

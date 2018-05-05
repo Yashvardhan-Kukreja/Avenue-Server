@@ -29,19 +29,31 @@ router.post("/doctor/login", (req, res) => {
 
 });
 
-router.post("/patient/register", (req, res) => {
+router.post("/patient/register/:docId", (req, res) => {
     let name = req.body.name;
     let address = req.body.address;
     let geoaddress = req.body.geoaddress;
     let email = req.body.email;
     let contact = req.body.contact;
     let disease_name = req.body.disease_name;
+    let docId = req.params.docId;
 
-    AuthControllers.registerPatient(name, address, geoaddress, email, contact, disease_name).then(data => {
+    AuthControllers.registerPatient(name, address, geoaddress, email, contact, disease_name, docId).then(data => {
         res.json(data);
     }).catch(err => {
         res.json(err);
     });
 
-
 });
+
+router.post("/disease/register", (req, res) => {
+    let name = req.body.name;
+
+    AuthControllers.registerDisease(name, "Fatal").then(data=> {
+        res.json(data);
+    }).catch(err => {
+        res.json(err);
+    })
+});
+
+module.exports = router;
