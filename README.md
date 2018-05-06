@@ -9,37 +9,45 @@ API documentation
 
 **=> Authentication Routes:**
 
-Doctor SignUp
-- POST /authenticate/user/register : Parameters (name, email, password, contact)
+Doctor Register
+- POST /authenticate/doctor/register : Parameters (name, email, password, contact)
 - Response : {success: true, message: "Doctor registered successfully"}
 
 Doctor Login
+- POST /authenticate/doctor/login : Parameters (email, password)
+- Response : {success: true, message: "Doctor logged in successfully", doctor: <doctor object>}
+
+Disease Register
+- POST /authenticate/disease/register : Parameters (name, description)
+- Response : {success: true, message: "Disease registered successfully"}
+
+Normal User Register
+- POST /authenticate/user/register : Parameters (name, address, geoaddress, email, password, contact)
+- Response : {success: true, message: "User registered successfully"}
+
+Normal User Login
 - POST /authenticate/user/login : Parameters (email, password)
-- Response : {success: true, message: "Doctor logged in successfully", token: token}
-
-Organisation SignUp
-- POST /authenticate/organisation/register : Parameters (name, college, email, contact, password)
-- Response : {success: true, message: "Organisation registered successfully"}
-
-Organisation Login
-- POST /authenticate/organisation/login : Parameters (email, password)
-- Response : {success: true, message: "Organisation authenticated successfully", token: token}
-
-**=> User Routes:**
-
-Fetching user details
-- GET /user/fetchDetails: Headers ("x-access-token": token)
-- Response : {success: true, message: "User details fetched successfully", user: user}
-
-**=> Organisation Routes:**
-
-Fetching user details
-- GET /user/fetchDetails: Headers ("x-access-token": token)
-- Response : {success: true, message: "Organisation details fetched successfully", organisation: organisation}
+- Response : {success: true, message: "User logged in successfully", user: <user object>}
 
 
-**=> Variables:**
+**=> Doctor Routes:**
 
-- token: JSON Web Token containing the user object or the organisation object in encoded form
-- user: A user object containing the respective user details except _id and password
-- organisation: An organisation object containing the respective organisation details except _id and password
+Close a case
+- POST /doctor/closeCase/:patId/:docId : URL Parameters (patientId, doctorId)
+- Response : {success: true, message: "Case closed successfully"}
+
+Fetch all patients of a specific doctor
+- POST /doctor/fetchAllPatients/:id : URL Parameters (doctorId)
+- Response: {success: true, message: "Fetched all the patients", patients: <Array of patient objects>}
+
+Fetch geocoordinates of all the open cases
+- GET /doctor/fetchAllCoordiantes
+- Response: {success: true, message: "Coordinates fetched successfully", coordinates: <Array of filtered objects containing the geocoordinates>}
+
+Open a case by a specific doctor
+- POST /doctor/openCase/:docId : URL Parameters (doctorId), Parameters (name, address, geoaddress, email, contact, disease_name, disease_desc, img_url)
+- Reponse: {success: true, message: "Patient registered successfully"}
+
+Locate all the open cases within 4km of current location
+- POST /doctor/nearbyCases : Parameters (current_lat, current_long)
+- Response: {success: true, message: "Fetched the cases within 4km", cases: <Array of cases within 4km>}

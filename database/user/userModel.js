@@ -9,6 +9,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    lat: {
+        type: Number
+    },
+    long: {
+        type: Number
+    },
     geoaddress: {
         type: String, //"12.122334 23.1223"
         required: true
@@ -26,15 +32,15 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    },
-    current_disease: {
+    }
+    /*current_disease: {
         type: String,
         default: "No disease"
     },
     case_status: {
-        type: boolean,
+        type: Boolean,
         default: false
-    }
+    }*/
 });
 
 module.exports = mongoose.model('User', userSchema, "users");

@@ -97,3 +97,68 @@ module.exports.registerDisease = (name, description) => {
     });
 };
 
+module.exports.loginUser = (email, password) => {
+    return new Promise((resolve, reject) => {
+        User.findOne({email: email}).exec((err, outputUser) => {
+            if (err) {
+                console.log(err);
+                reject({success: false, message: "An error occurred"});
+            } else {
+                if (!outputUser)
+                    reject({success: false, message: "No user found with this email"});
+                else {
+                    bcrypt.compare(password, outputUser.password, (err, valid) => {
+                        if (err) {
+                            console.log(err);
+                            reject({success: false, message: "An error occurred"});
+                        } else {
+                            if (!valid)
+                                reject({success: false, message: "Wrong password entered"});
+                            else
+                                resolve({success: true, message: "User logged in successfully", user: outputUser});
+                        }
+                    });
+                }
+            }
+        });
+    });
+};
+
+module.exports.registerUser = (name, address, geoaddress, email, contact, password) => {
+    return new Promise((resolve, reject) => {
+        var newUser = new User({
+            name: name,
+            address: address,
+            geoaddress: geoaddress,
+            lat: parseFloat(geoaddress.split(" ")[0]),
+            long: parseFloat(geoaddress.split(" ")[1]),
+            email: email,
+            contact: contact,
+            password: password
+        });
+
+        bcrypt.genSalt(10, (err, salt) => {
+            if (err) {
+                console.log(err);
+                reject({success: false, message: "An error occurred"});
+            } else {
+                bcrypt.hash(password, salt, null, (err, hash) => {
+                    if (err) {
+                        console.log(err);
+                        reject({success: false, message: "An error occurred"});
+                    } else {
+                        newUser.password = hash;
+                        newUser.save((err) => {
+                            if (err) {
+                                console.log(err);
+                                reject({success: false, message: "An error occurred"});
+                            } else {
+                                resolve({success: true, message: "User registered successfully"});
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+};

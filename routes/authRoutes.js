@@ -32,8 +32,34 @@ router.post("/doctor/login", (req, res) => {
 
 router.post("/disease/register", (req, res) => {
     let name = req.body.name;
+    let description = req.body.description;
+    AuthControllers.registerDisease(name, description).then(data=> {
+        res.json(data);
+    }).catch(err => {
+        res.json(err);
+    });
+});
 
-    AuthControllers.registerDisease(name, "Fatal").then(data=> {
+router.post("/user/register", (req, res) => {
+    let name = req.body.name;
+    let email = req.body.email;
+    let address = req.body.address;
+    let geoaddress = req.body.geoaddress;
+    let contact = req.body.contact;
+    let password = req.body.password;
+
+    AuthControllers.registerUser(name, address, geoaddress, email, contact, password).then(data => {
+        res.json(data);
+    }).catch(err => {
+        res.json(err);
+    });
+});
+
+router.post("/user/login", (req, res) => {
+    let email = req.body.email;
+    let password = req.body.password;
+
+    AuthControllers.loginUser(email, password).then(data => {
         res.json(data);
     }).catch(err => {
         res.json(err);
